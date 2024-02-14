@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 41 90" style="enable-background:new 0 0 41 90;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#6D181C;stroke:#020203;stroke-miterlimit:10;}
+	.st1{fill:#D9BA8F;stroke:#020203;stroke-miterlimit:10;}
+	.st2{fill:#91622E;stroke:#010200;stroke-miterlimit:10;}
+	.st3{fill:#39342F;}
+	.st4{fill:#E2667C;stroke:#020203;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#E1D300;stroke-width:1.5;stroke-miterlimit:10;}
+	.st6{fill:#FFFFFF;}
+	.st7{fill:#91622E;stroke:#000000;stroke-miterlimit:10;}
+</style>
+<rect x="23.8" y="75" class="st0" width="11.2" height="9.9"/>
+<polygon class="st1" points="23.8,81.7 34.8,81.7 34.8,83.4 39.1,83.4 39.1,86.9 23.8,86.9 "/>
+<rect x="5.6" y="74.1" transform="matrix(2.477484e-02 -0.9997 0.9997 2.477484e-02 -68.5263 89.2279)" class="st0" width="11.8" height="11.2"/>
+<path class="st0" d="M36.5,79.7H3.6C2.3,79.7,1,78.4,1,77V44.2c0-1.4,1.2-2.7,2.6-2.7h32.9c1.4,0,2.6,1.2,2.6,2.7v32.7
+	C39,78.4,37.9,79.7,36.5,79.7z"/>
+<polygon class="st1" points="5.8,82.3 16.8,82.5 16.8,84.2 21.2,84.3 21.1,87.9 5.7,87.5 "/>
+<path class="st2" d="M4.5,41.2V20.9C4.5,20.9,8.8,9,20.5,9s15.2,10.6,15.2,10.6v21.6"/>
+<ellipse transform="matrix(0.9679 -0.2513 0.2513 0.9679 -4.4889 8.1899)" class="st3" cx="29.8" cy="21.7" rx="1.4" ry="4.5"/>
+<ellipse transform="matrix(0.9968 -7.980366e-02 7.980366e-02 0.9968 -2.4067 2.8161)" class="st4" cx="34" cy="31.5" rx="5.6" ry="3.1"/>
+<path class="st5" d="M18,11.8c0,0-3-9.9-5.8-8.2"/>
+<path class="st5" d="M19.8,11.6c0,0-0.9-9.5,0.3-9.9"/>
+<path class="st5" d="M21.8,11.4c0,0-0.4-6.1,2.5-5.2"/>
+<circle class="st6" cx="29.6" cy="19.7" r="0.8"/>
+<g>
+	<polygon class="st0" points="3.3,28.4 10.3,25.2 24.3,50.3 17.4,53.5 	"/>
+	<polygon class="st7" points="14.1,31.9 7.2,35.3 3.3,28.4 10.3,25.2 	"/>
+</g>
+</svg>

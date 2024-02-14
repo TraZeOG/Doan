@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#878787;}
+	.st1{fill:#B2B2B2;}
+	.st2{fill:#878787;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st3{fill:#B2B2B2;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+</style>
+<rect class="st0" width="50" height="50"/>
+<rect class="st1" width="50" height="10.7"/>
+<g>
+	<polyline class="st2" points="0,10.7 5.7,6 10.3,10.7 	"/>
+	<polyline class="st2" points="19.8,10.7 25.6,6 30.2,10.7 	"/>
+	<polyline class="st2" points="10.3,10.7 15.6,6 19.8,10.7 	"/>
+	<polyline class="st2" points="40.4,10.7 45.7,6 50,10.7 	"/>
+	<polyline class="st2" points="30.2,10.7 35.8,6 40.4,10.7 	"/>
+</g>
+<g>
+	<polyline class="st3" points="0,22.7 5.7,17.9 10.3,22.7 	"/>
+	<polyline class="st3" points="19.8,22.7 25.6,17.9 30.2,22.7 	"/>
+	<polyline class="st3" points="10.3,22.7 15.6,17.9 19.8,22.7 	"/>
+	<polyline class="st3" points="40.3,22.7 45.7,17.9 50,22.7 	"/>
+	<polyline class="st3" points="30.2,22.7 35.8,17.9 40.3,22.7 	"/>
+</g>
+<rect x="0" y="22.7" class="st1" width="50" height="12"/>
+<g>
+	<polyline class="st2" points="0,34.7 5.7,29.9 10.3,34.7 	"/>
+	<polyline class="st2" points="19.8,34.7 25.6,29.9 30.2,34.7 	"/>
+	<polyline class="st2" points="10.3,34.7 15.6,29.9 19.8,34.7 	"/>
+	<polyline class="st2" points="40.3,34.7 45.7,29.9 50,34.7 	"/>
+	<polyline class="st2" points="30.2,34.7 35.8,29.9 40.3,34.7 	"/>
+</g>
+<g>
+	<polyline class="st3" points="0,46.6 5.7,41.9 10.3,46.6 	"/>
+	<polyline class="st3" points="19.8,46.6 25.6,41.9 30.2,46.6 	"/>
+	<polyline class="st3" points="10.3,46.6 15.6,41.9 19.8,46.6 	"/>
+	<polyline class="st3" points="40.3,46.6 45.7,41.9 50,46.6 	"/>
+	<polyline class="st3" points="30.2,46.6 35.8,41.9 40.3,46.6 	"/>
+</g>
+<rect x="0" y="46.6" class="st1" width="50" height="3.4"/>
+<polygon class="st3" points="23.8,37.5 23.8,36.5 25.3,37.5 24.2,38.2 "/>
+<polygon class="st2" points="7.7,26.2 9.5,26.2 10.3,27.2 9,27.2 7.1,26.7 "/>
+<polygon class="st3" points="28.6,18.9 31.5,18.9 33.4,18.4 31,17.7 29.4,16.8 "/>
+<polygon class="st2" points="7.9,2 8.2,3.3 10,3.6 10.8,2.2 "/>
+<polygon class="st2" points="43.5,47.9 44.7,45.6 46.7,47.9 45.5,48.3 "/>
+</svg>
