@@ -1,10 +1,10 @@
-from classes import *
-from levels.level_editor import main
+from imports import *
 
 #variables------------------------------------------------------------------------------
 
 
 
+pygame.init()
 SCREEN = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
 #init mixer
 mixer.pre_init(44100, 16, 2, 4096)
@@ -95,27 +95,104 @@ texte = ""
 level_names = datas[5]
 
 #load de trucs--------------------------------------------------------------------------------------
-pygame.init()
-#fonts----------------------------------------------------------------------------------
-font_bauhaus_40 = pygame.font.SysFont("Bauhaus 93", 40)
-font_bauhaus_50 = pygame.font.SysFont("Bauhaus 93", 50)
-font_lilitaone_30 = pygame.font.Font("fonts/LilitaOne-Regular.ttf", 30)
-font_lilitaone_50 = pygame.font.Font("fonts/LilitaOne-Regular.ttf", 50)
-font_lilitaone_60 = pygame.font.Font("fonts/LilitaOne-Regular.ttf", 60)
-font_lilitaone_70 = pygame.font.Font("fonts/LilitaOne-Regular.ttf", 70)
-font_lilitaone_80 = pygame.font.Font("fonts/LilitaOne-Regular.ttf", 80)
-font_ubuntu_30 = pygame.font.Font("fonts/Ubuntu-Regular.ttf", 30)
-font_ubuntu_40 = pygame.font.Font("fonts/Ubuntu-Regular.ttf", 40)
-#couleurs-------------------------------------------------------------------------------
-clr_white_minus = (155,155,155)
-clr_white = (225,225,225)
-clr_black = (0,0,0)
-clr_red = (255,0,0)
-clr_green = (0,255,0)
-clr_blue = (0,0,255)
-clr_brown = (51,0,17)
+
+
+def change_music(current_music, numero_music):
+    if not current_music == numero_music:
+        if path.exists(f"sounds/background_msc_{numero_music}.mp3"):
+            pygame.mixer.music.load(f"sounds/background_msc_{numero_music}.mp3")
+            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.play(-1, 0.0, 5000)
+        else:
+            pygame.mixer.music.unload()
+
+def reset_level(level, groups):
+    player.reset(100, SCREEN_HEIGHT - 150)
+    for group in groups:
+        group.empty()
+    world_data = []
+    if path.exists(f"levels/level{level}_data"):
+        pickle_read = open(f"levels/level{level}_data", "rb")
+        world_data = pickle.load(pickle_read)
+        world = World(world_data)
+    return world
+
+def full_draw(groups, screen):
+    for group in groups:
+        group.draw(screen)
+
+def full_update(groups):
+    for group in groups:
+        group.update("default")
+
+def full_scroll(groups):
+    for group in groups:
+        group.update("scroll")
+
+def write(base, font1, font2, font3, color, message, max_length, screen):
+    if not base == "[pas de nom]":
+        text = f"{base}"
+    else:
+        text = ""
+    writing = True
+    while writing:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    writing = False
+                elif event.key == pygame.K_BACKSPACE:
+                    text = text[:-1]
+                else:
+                    if len(text) < max_length:
+                        text += event.unicode
+        screen.fill((30, 30, 30))
+        text_width, text_height = font1.size(message)
+        draw_text(message, font1, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2 - 100)
+        draw_text("press Enter to finish", font3, color, SCREEN_WIDTH - 300, SCREEN_HEIGHT - 50)
+        text_width, text_height = font2.size(text)
+        draw_text(text, font2, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2)
+        pygame.display.flip()
+        CLOCK.tick(30)
+    return text
+
+def waiting_screen(waiting_screen, text1, text2, font, time, screen):
+    screen.blit(waiting_screen, (0,0))
+    text_width, text_height = font.size(f"{text1}")
+    draw_text(f"{text1}", font, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2)
+    text_width, text_height = font.size(f"{text2}")
+    draw_text(f"{text2}", font, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2 + 100)
+    pygame.display.flip()
+    pygame.time.delay(time * 15)
+
+def save():
+    pickle_out = open('data/data_main', 'wb')
+    datas[0] = score
+    datas[1] = numero_joueur
+    datas[2] = level_win
+    datas[3] = nb_created_levels
+    datas[4] = skin_prices
+    datas[5] = level_names
+    pickle.dump(datas, pickle_out)
+    pickle_out.close()
+    pygame.time.delay(180)
+
+def mouse_scrolling(event):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.button == 4:  # Scrolling up
+            return 50
+        elif event.button == 5:  # Scrolling down
+            return -50
+        else:
+            return 0
+    else:
+        return 0
+
+
+
 #images---------------------------------------------------------------------------
-img_bouton_restart = pygame.image.load("sprites\img_bouton_restart.webp")
+img_bouton_restart = pygame.image.load("sprites/img_bouton_restart.webp")
 img_bouton_exit = pygame.image.load("sprites/img_bouton_exit.webp")
 img_bouton_back = pygame.image.load("sprites/img_bouton_back.webp")
 img_bouton_menu = pygame.image.load("sprites/img_bouton_menu.webp")
@@ -145,9 +222,9 @@ img_waiting_screen_1 = pygame.transform.scale(img_waiting_screen_1, (SCREEN_WIDT
 #--------------------
 img_fleche = pygame.image.load("sprites/img_fleche.webp")
 img_fleche_flip = pygame.transform.flip(img_fleche, True, False)
-img_coin_score = pygame.image.load("sprites\img_coin_score.webp")
-img_coin_price = pygame.image.load("sprites\img_coin.webp")
-img_joueur_select = pygame.image.load("sprites\img_joueur_select.webp")
+img_coin_score = pygame.image.load("sprites/img_coin_score.webp")
+img_coin_price = pygame.image.load("sprites/img_coin.webp")
+img_joueur_select = pygame.image.load("sprites/img_joueur_select.webp")
 #sons------------------------------------------------------------------------------
 jump_msc = pygame.mixer.Sound("sounds/jump_msc.wav")
 jump_msc.set_volume(0.7)
@@ -155,189 +232,6 @@ coin_msc = pygame.mixer.Sound("sounds/coin_msc.mp3")
 coin_msc.set_volume(1)
 game_over_msc = pygame.mixer.Sound("sounds/game_over_msc.mp3")
 game_over_msc.set_volume(1)
-
-#def des fonctions----------------------------------------------------------------------
-
-def draw_grid():
-    for ligne in range(28):
-        pygame.draw.line(SCREEN, (255,255,255), (0, TILE_SIZE*ligne), (SCREEN_WIDTH,TILE_SIZE*ligne))
-        pygame.draw.line(SCREEN, (255,255,255), (TILE_SIZE*ligne, 0), (TILE_SIZE*ligne, SCREEN_HEIGHT))
-
-def draw_text(texte, font, couleur, x, y):
-    img = font.render(texte, True, couleur)
-    SCREEN.blit(img, (x, y))
-
-def change_music(current_music, numero_music):
-    if not current_music == numero_music:
-        if path.exists(f"sounds/background_msc_{numero_music}.mp3"):
-            pygame.mixer.music.load(f"sounds/background_msc_{numero_music}.mp3")
-            pygame.mixer.music.set_volume(1)
-            pygame.mixer.music.play(-1, 0.0, 5000)
-        else:
-            pygame.mixer.music.unload()
-
-def reset_level(level, groups):
-    player.reset(100, SCREEN_HEIGHT - 150)
-    for group in groups:
-        group.empty()
-    world_data = []
-    if path.exists(f"levels/level{level}_data"):
-        pickle_read = open(f"levels/level{level}_data", "rb")
-        world_data = pickle.load(pickle_read)
-        world = World(world_data)
-    return world
-
-def full_draw(groups):
-    for group in groups:
-        group.draw(SCREEN)
-
-def full_update(groups):
-    for group in groups:
-        group.update("default")
-
-def full_scroll(groups):
-    for group in groups:
-        group.update("scroll")
-
-def write(base, font, color, message, max_length):
-    if not base == "[pas de nom]":
-        text = f"{base}"
-    else:
-        text = ""
-    writing = True
-    while writing:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    writing = False
-                elif event.key == pygame.K_BACKSPACE:
-                    text = text[:-1]
-                else:
-                    if len(text) < max_length:
-                        text += event.unicode
-        SCREEN.fill((30, 30, 30))
-        text_width, text_height = font_lilitaone_80.size(message)
-        draw_text(message, font_lilitaone_80, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2 - 100)
-        draw_text("press Enter to finish", font_ubuntu_30, clr_white, SCREEN_WIDTH - 300, SCREEN_HEIGHT - 50)
-        text_width, text_height = font.size(text)
-        draw_text(text, font, color, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2)
-        pygame.display.flip()
-        CLOCK.tick(30)
-    return text
-
-def waiting_screen(waiting_screen, text1, text2, time):
-    SCREEN.blit(waiting_screen, (0,0))
-    text_width, text_height = font_lilitaone_80.size(f"{text1}")
-    draw_text(f"{text1}", font_lilitaone_80, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2)
-    text_width, text_height = font_lilitaone_80.size(f"{text2}")
-    draw_text(f"{text2}", font_lilitaone_80, clr_white, (SCREEN_WIDTH - text_width) // 2, (SCREEN_HEIGHT - text_height) // 2 + 100)
-    pygame.display.flip()
-    pygame.time.delay(time * 15)
-
-def save():
-    pickle_out = open('data/data_main', 'wb')
-    datas[0] = score
-    datas[1] = numero_joueur
-    datas[2] = level_win
-    datas[3] = nb_created_levels
-    datas[4] = skin_prices
-    datas[5] = level_names
-    pickle.dump(datas, pickle_out)
-    pickle_out.close()
-    pygame.time.delay(180)
-
-def mouse_scrolling(event):
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if event.button == 4:  # Scrolling up
-            return 50
-        elif event.button == 5:  # Scrolling down
-            return -50
-        else:
-            return 0
-    else:
-        return 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# LES CLASSES ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# LES CLASSES ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#friendly -------------------------------------------------------------------------------------------------------------
-
-
-
-#boutons ----------------------------------------------------------------------------------------------------
-
-
-class Bouton():
-
-    def __init__(self, x, y, width, height, image):
-        self.image = pygame.transform.scale(image, (width, height))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.clicked = False
-
-    def draw(self, type):
-        if type == 1:
-            reset_click = False
-            mouse_cos = pygame.mouse.get_pos()
-            SCREEN.blit(self.image, self.rect)
-            if self.rect.collidepoint(mouse_cos):
-                if pygame.mouse.get_pressed()[0] == 1:
-                    self.clicked = True
-                if pygame.mouse.get_pressed()[0] == 0 and self.clicked == True:
-                    reset_click = True
-                    self.clicked = False
-            return reset_click
-        elif type == 2:
-            reset_click = False
-            mouse_cos = pygame.mouse.get_pos()
-            SCREEN.blit(self.image, self.rect)
-            if self.rect.collidepoint(mouse_cos):
-                if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                    self.clicked = True
-                    reset_click = True
-                if pygame.mouse.get_pressed()[0] == 0:
-                    self.clicked = False
-            return reset_click
-
 
 
 #world -------------------------------------------------------------------------------------------------------
@@ -478,31 +372,7 @@ if path.exists(f"levels/level{level}_data"):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #DEF DU JOUEUR -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -515,7 +385,7 @@ if path.exists(f"levels/level{level}_data"):
 
 class Joueur():
     def __init__(self, x, y, numero_joueur):
-        self.img = pygame.image.load(f"sprites\img_joueur_{numero_joueur}_0.webp")
+        self.img = pygame.image.load(f"sprites/img_joueur_{numero_joueur}_0.webp")
         self.reset(x, y)
 
     def update(self, game_over):
@@ -841,9 +711,9 @@ class Joueur():
     
     def reset(self, x, y):
 
-        self.image = pygame.image.load(f"sprites\img_joueur_{numero_joueur}_0.webp")
-        self.image_dead = pygame.image.load("sprites\img_dead_joueur.webp")
-        self.image_saut = pygame.image.load(f"sprites\img_joueur_{numero_joueur}_jump.webp")
+        self.image = pygame.image.load(f"sprites/img_joueur_{numero_joueur}_0.webp")
+        self.image_dead = pygame.image.load("sprites/img_dead_joueur.webp")
+        self.image_saut = pygame.image.load(f"sprites/img_joueur_{numero_joueur}_jump.webp")
         if type_level == "small":
             self.image = pygame.transform.scale(self.image, (30,60))
         if type_level == "flappy_bird":
@@ -888,39 +758,7 @@ player = Joueur(95, SCREEN_HEIGHT - 140, numero_joueur)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #LANCEMENT DU JEU -----------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -964,9 +802,9 @@ while run==True:
         SCREEN.blit(img_background_menu, (0,0))
         SCREEN.blit(img_background_joueur_1, (SCREEN_WIDTH // 2 - 457, SCREEN_HEIGHT // 2 - 175))
         SCREEN.blit(img_background_joueur_2, (SCREEN_WIDTH // 2 + 20, SCREEN_HEIGHT // 2 - 175))
-        draw_text('Choix du perso', font_lilitaone_50, clr_black, SCREEN_WIDTH // 2 - 415, SCREEN_HEIGHT // 2 - 160)
-        draw_text('Naviguation', font_lilitaone_50, clr_black, SCREEN_WIDTH // 2 + 90, SCREEN_HEIGHT // 2 - 130)
-        draw_text(f'Vous avez {score} pièces', font_bauhaus_40, clr_black, 10, 10)
+        draw_text('Choix du perso', font_lilitaone_50, clr_black, SCREEN_WIDTH // 2 - 415, SCREEN_HEIGHT // 2 - 160, SCREEN)
+        draw_text('Naviguation', font_lilitaone_50, clr_black, SCREEN_WIDTH // 2 + 90, SCREEN_HEIGHT // 2 - 130, SCREEN)
+        draw_text(f'Vous avez {score} pièces', font_bauhaus_40, clr_black, 10, 10, SCREEN)
 
         handable = 0
         for bouton in boutons_menu:
@@ -981,38 +819,31 @@ while run==True:
         SCREEN.blit(pygame.image.load(f"sprites/img_joueur_{numero_joueur}_menu.webp"), (SCREEN_WIDTH // 2 - 330, SCREEN_HEIGHT // 2 - 75))
         #draw_text(f"{nom_joueur[numero_joueur - 1]}", font_lilitaone_50, clr_black, screen_width // 2 - 220, screen_height // 2 + 20)
 
-        if bouton_exit.draw(1) or key[pygame.K_e]:
+        if bouton_exit.draw(1, SCREEN) or key[pygame.K_e]:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             save()
             run = False
-        if bouton_niveaux.draw(1) or key[pygame.K_n]:
+        if bouton_niveaux.draw(1, SCREEN) or key[pygame.K_n]:
             pygame.time.delay(45)
             menu = LEVELS
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        if bouton_skins.draw(1) or key[pygame.K_k]:
+        if bouton_skins.draw(1, SCREEN) or key[pygame.K_k]:
             pygame.time.delay(45)
             menu = SKINS
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        if bouton_create.draw(1) or key[pygame.K_c]:
+        if bouton_create.draw(1, SCREEN) or key[pygame.K_c]:
             pygame.time.delay(45)
             menu = CREATE
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        if bouton_start.draw(1) or key[pygame.K_s]:
+        if bouton_start.draw(1, SCREEN) or key[pygame.K_s]:
             pygame.time.delay(15)
             menu = GAME
             level = 0
             game_over = 1
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        
-
-        #draw_text('CLASSEMENT:', font_ubuntu_30, clr_black, screen_width - 250, screen_height - 270)
-        for i in range(len(classement)):
-            pass
-            #draw_text(classement[i], font_ubuntu_30, clr_black, screen_width - 250, screen_height - 220 + 35 * i)
             
-
-
-
+            
+            
     elif menu == LEVELS:
 
         change_music(current_music, 0)
@@ -1048,7 +879,7 @@ while run==True:
             if bouton_niveau.rect.collidepoint(pygame.mouse.get_pos()):
                 bouton_niveau = Bouton(SCREEN_WIDTH // 2 + 140 * (i - 4) - 5, SCREEN_HEIGHT // 2 - 55 + 140 * j + mouse_scroll_niveaux, 110, 110, pygame.image.load(f"sprites/img_bouton_niveau_on_{level_num}_gros.webp"))
 
-            if bouton_niveau.draw(2):
+            if bouton_niveau.draw(2, SCREEN):
                 pygame.time.delay(30)
                 menu = GAME
                 last_menu = LEVELS
@@ -1086,15 +917,15 @@ while run==True:
                 draw_text(f"{i2 + 1}", font_lilitaone_70, clr_black, SCREEN_WIDTH // 2 + 140 * (i - 4) + 50 - text_width // 2, SCREEN_HEIGHT // 2 - text_height // 2 + 140 * j2 + mouse_scroll_niveaux)
             SCREEN.blit(img_cadenas, (SCREEN_WIDTH // 2 + 140 * (i - 4) + 6, SCREEN_HEIGHT // 2 - 45 + 140 * j2 + mouse_scroll_niveaux))
 
-        if bouton_back.draw(1) or key[pygame.K_ESCAPE]:
+        if bouton_back.draw(1, SCREEN) or key[pygame.K_ESCAPE]:
             pygame.time.delay(20)
             menu = LEVELS
         
-        if bouton_suite.draw(1):
+        if bouton_suite.draw(1, SCREEN):
             pygame.time.delay(30)
             menu = MINIGAMES
         
-        if bouton_delete.draw(1):
+        if bouton_delete.draw(1, SCREEN):
             level_win = 1
 
 
@@ -1109,19 +940,19 @@ while run==True:
         draw_text('Mini-jeux:', font_lilitaone_60, clr_black, 140, SCREEN_HEIGHT // 2 - 200)
         draw_text("more soon...", font_bauhaus_50, clr_black, SCREEN_WIDTH * 3 // 4, SCREEN_HEIGHT * 5 // 6)
 
-        if bouton_retour.draw(1):
+        if bouton_retour.draw(1, SCREEN):
             pygame.time.delay(30)
             menu = LEVELS
 
-        if bouton_suite.draw(1):
+        if bouton_suite.draw(1, SCREEN):
             pygame.time.delay(30)
             menu = CREATED_LVLS
 
-        if bouton_back.draw(1) or key[pygame.K_ESCAPE]:
+        if bouton_back.draw(1, SCREEN) or key[pygame.K_ESCAPE]:
             pygame.time.delay(20)
             menu = MINIGAMES
         
-        if bouton_random_mg.draw(1):    
+        if bouton_random_mg.draw(1, SCREEN):    
             random_mg = True
             pygame.time.delay(30)
             menu = GAME
@@ -1142,7 +973,7 @@ while run==True:
             if bouton_niveau.rect.collidepoint(pygame.mouse.get_pos()):
                 bouton_niveau = Bouton(SCREEN_WIDTH // 2 + 140 * (i - 4) - 5, SCREEN_HEIGHT // 2 - 55 + 140 * j, 110, 110, pygame.image.load(f"sprites/img_bouton_niveau_on_{level_num}_gros.webp"))
 
-            if bouton_niveau.draw(2):
+            if bouton_niveau.draw(2, SCREEN):
                 pygame.time.delay(30)
                 menu = GAME
                 last_menu = MINIGAMES
@@ -1188,7 +1019,7 @@ while run==True:
             if bouton_niveau.rect.collidepoint(pygame.mouse.get_pos()):
                 bouton_niveau = Bouton(SCREEN_WIDTH // 2 + 140 * (i - 4) - 5, SCREEN_HEIGHT // 2 - 55 + 140 * j, 110, 110, pygame.image.load(f"sprites/img_bouton_niveau_on_1_gros.webp"))
 
-            if bouton_niveau.draw(2):
+            if bouton_niveau.draw(2, SCREEN):
                 pygame.time.delay(30)
                 menu = GAME
                 last_menu = CREATED_LVLS
@@ -1202,11 +1033,11 @@ while run==True:
                 text_width, text_height = font_lilitaone_70.size(str(i2 + 1))
                 draw_text(f"{i2 + 1}", font_lilitaone_70, clr_black, SCREEN_WIDTH // 2 + 140 * (i - 4) + 50 - text_width // 2, SCREEN_HEIGHT // 2 - text_height // 2 + 140 * j)
 
-        if bouton_back.draw(1) or key[pygame.K_ESCAPE]:
+        if bouton_back.draw(1, SCREEN) or key[pygame.K_ESCAPE]:
             pygame.time.delay(20)
             menu = MAIN
         
-        if bouton_retour.draw(1):
+        if bouton_retour.draw(1, SCREEN):
             pygame.time.delay(30)
             menu = MINIGAMES
 
@@ -1235,11 +1066,11 @@ while run==True:
                 bouton_niveau = Bouton(SCREEN_WIDTH // 2 + 140 * (i - 4) - 5, SCREEN_HEIGHT // 2 - 55 + 140 * j, 110, 110, pygame.image.load(f"sprites/img_bouton_niveau_on_1_gros.webp"))
 
 
-            if bouton_niveau.draw(2):
+            if bouton_niveau.draw(2, SCREEN):
                 img_background_waiting_screen = pygame.image.load(f"sprites/img_background_waiting_screen_3.webp")
                 img_background_waiting_screen = pygame.transform.scale(img_background_waiting_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
-                waiting_screen(img_background_waiting_screen, "Création de niveaux", f"Niveau {i2 + 1}", 60)
-                level_names[i2+1] = write(level_names[i2+1], font_bauhaus_50, clr_white, "Entrez un nom pour le niveau:", 20)
+                waiting_screen(img_background_waiting_screen, "Création de niveaux", f"Niveau {i2 + 1}", font_lilitaone_80, 60, SCREEN)
+                level_names[i2+1] = write(level_names[i2+1], font_lilitaone_80, font_bauhaus_50, font_ubuntu_30, clr_white, "Entrez un nom pour le niveau:", 20)
                 main(201 + i2)
 
             if bouton_niveau.rect.collidepoint(pygame.mouse.get_pos()):
@@ -1250,14 +1081,14 @@ while run==True:
                 draw_text(f"{i2 + 1}", font_lilitaone_70, clr_black, SCREEN_WIDTH // 2 + 140 * (i - 4) + 50 - text_width // 2, SCREEN_HEIGHT // 2 - text_height // 2 + 140 * j)
 
 
-        if bouton_add.draw(1) and nb_created_levels < 20:
+        if bouton_add.draw(1, SCREEN) and nb_created_levels < 20:
             nb_created_levels += 1
 
-        if bouton_delete.draw(1) and nb_created_levels > 1:
+        if bouton_delete.draw(1, SCREEN) and nb_created_levels > 1:
             nb_created_levels -= 1
 
 
-        if bouton_back.draw(1) or key[pygame.K_ESCAPE]:
+        if bouton_back.draw(1, SCREEN) or key[pygame.K_ESCAPE]:
             pygame.time.delay(20)
             menu = MAIN
 
@@ -1292,7 +1123,7 @@ while run==True:
                 if bouton_niveau.rect.collidepoint(pygame.mouse.get_pos()):
                     bouton_niveau = Bouton(SCREEN_WIDTH // 2 + 140 * (i - 4) - 5, SCREEN_HEIGHT // 2 - 55 + 140 * j, 110, 110, pygame.image.load("sprites/img_bouton_niveau_on_3_gros.webp"))
 
-            if bouton_niveau.draw(2):
+            if bouton_niveau.draw(2, SCREEN):
                 if not skin_prices[i2] == 0: 
                     if score >= skin_prices[i2]:
                         score -= skin_prices[i2]
@@ -1313,7 +1144,7 @@ while run==True:
                 SCREEN.blit(pygame.image.load("sprites/img_bouton_niveau_0.webp"), (SCREEN_WIDTH // 2 + 140 * (i - 4), SCREEN_HEIGHT // 2 - 50 + 140 * j))
             
 
-        if bouton_back.draw(1) or key[pygame.K_ESCAPE]:
+        if bouton_back.draw(1, SCREEN) or key[pygame.K_ESCAPE]:
             pygame.time.delay(20)
             menu = MAIN
 
@@ -1417,14 +1248,14 @@ while run==True:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             else:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-            if bouton_restart.draw(1) or key[pygame.K_RETURN]:
+            if bouton_restart.draw(1, SCREEN) or key[pygame.K_RETURN]:
                 pygame.time.delay(30)
                 player.mostleftposition = 0
                 world_data = []
                 world = reset_level(level, groups)
                 game_over = 0
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-            if bouton_menu.draw(1):
+            if bouton_menu.draw(1, SCREEN):
                 pygame.time.delay(45)
                 menu = last_menu
                 game_over = 0
@@ -1444,11 +1275,11 @@ while run==True:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             else:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-            if bouton_resume_pause.draw(1):
+            if bouton_resume_pause.draw(1, SCREEN):
                 pygame.time.delay(30)
                 game_over = 0
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-            if bouton_menu_pause.draw(1):
+            if bouton_menu_pause.draw(1, SCREEN):
                 pygame.time.delay(45)
                 game_over = 0
                 level = 1
@@ -1461,7 +1292,6 @@ while run==True:
 
 
         if game_over == 1:
-
             
             if level % 100 < nb_levels:
                 if level // 100 == 0 or level // 100 == 2:
@@ -1493,11 +1323,11 @@ while run==True:
                 img_background_waiting_screen = pygame.transform.scale(img_background_waiting_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 SCREEN.blit(img_background_waiting_screen, (0,0))
                 if level // 100 == 0:
-                    waiting_screen(img_waiting_screen, f"Niveau {level}", difficulte[monde - 1], 80)
+                    waiting_screen(img_waiting_screen, f"Niveau {level}", difficulte[monde - 1], font_lilitaone_80, 80, SCREEN)
                 if level // 100 == 1:
-                    waiting_screen(img_waiting_screen, f"Mini-jeu {level - 100}", minigame_name[level - 101], 80)                 
+                    waiting_screen(img_waiting_screen, f"Mini-jeu {level - 100}", minigame_name[level - 101], font_lilitaone_80, 80, SCREEN)                 
                 if level // 100 == 2:   
-                    waiting_screen(img_waiting_screen, f"Niveau créé n°{level - 200}", level_names[level - 200], 100)
+                    waiting_screen(img_waiting_screen, f"Niveau créé n°{level - 200}", level_names[level - 200], font_lilitaone_80, 100, SCREEN)
                 if level in mondes[4]:
                     monde = 3
                 if level in mondes[5]:
@@ -1509,7 +1339,7 @@ while run==True:
             else:
                 msg=["MINH", "DOAN"]
                 draw_text(f'TU AS TROUVE {msg[numero_joueur - 1]}!', font_lilitaone_60, clr_blue, SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 170)
-                if bouton_restart.draw(1) or key[pygame.K_RETURN] == True:
+                if bouton_restart.draw(1, SCREEN) or key[pygame.K_RETURN] == True:
                     menu = last_menu
                     player.direction = 1
                     level = 1

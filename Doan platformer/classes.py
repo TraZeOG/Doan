@@ -1,4 +1,4 @@
-from imports import *
+from constants import *
 
 
 class Fond(pygame.sprite.Sprite):
