@@ -397,7 +397,3 @@ def main(whatlevel):
 
 		#update la fenetre
 		pygame.display.update()
-
-pygame.init()
-main(21)
-pygame.quit()

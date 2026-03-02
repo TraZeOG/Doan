@@ -5,7 +5,7 @@ class Fond(pygame.sprite.Sprite):
 
     def __init__(self, monde):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(f"sprites\img_background_{monde}.webp").convert()
+        self.image = pygame.image.load(f"sprites/img_background_{monde}.webp").convert()
         self.image = pygame.transform.scale(self.image, (100 * TILE_SIZE, SCREEN_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -42,10 +42,10 @@ class Bloc_breakable(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
         pygame.sprite.Sprite.__init__(self)
         if type == "bloc":
-            img = pygame.image.load("sprites\img_breakable_block.webp")
+            img = pygame.image.load("sprites/img_breakable_block.webp")
             self.image = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
         if type == "platform":
-            img = pygame.image.load("sprites\img_platform_break.webp")
+            img = pygame.image.load("sprites/img_platform_break.webp")
             self.image = pygame.transform.scale(img, (TILE_SIZE, 15))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -73,13 +73,13 @@ class Plateforme(pygame.sprite.Sprite):
     def __init__(self, x, y, move_x, move_y):
         pygame.sprite.Sprite.__init__(self)
         if (move_x, move_y) == (1,0):
-            img = pygame.image.load("sprites\img_plateforme_xa_1.webp")
+            img = pygame.image.load("sprites/img_plateforme_xa_1.webp")
         if (move_x, move_y) == (0,1):
-            img = pygame.image.load("sprites\img_plateforme_ya_1.webp")
+            img = pygame.image.load("sprites/img_plateforme_ya_1.webp")
         if (move_x, move_y) == (2,0):
-            img = pygame.image.load("sprites\img_plateforme_xb_1.webp")
+            img = pygame.image.load("sprites/img_plateforme_xb_1.webp")
         if (move_x, move_y) == (0,2):
-            img = pygame.image.load("sprites\img_plateforme_yb_1.webp")
+            img = pygame.image.load("sprites/img_plateforme_yb_1.webp")
         self.image = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE // 2))
         self.rect = self.image.get_rect()
         random_decalage = random.randint(0,70)
@@ -149,7 +149,7 @@ class Ennemi1a(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi1a_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi1a_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -195,7 +195,7 @@ class Ennemi1b(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi1b_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi1b_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -240,7 +240,7 @@ class Ennemi2a(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi2a_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi2a_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -286,7 +286,7 @@ class Ennemi2b(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi2b_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi2b_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -331,7 +331,7 @@ class Ennemi3a(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi3a_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi3a_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -398,7 +398,7 @@ class Ennemi4a(pygame.sprite.Sprite):
 
     def __init__(self, x, y, lx, ly):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_ennemi2a_1.webp")
+        self.image = pygame.image.load("sprites/img_ennemi2a_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -453,7 +453,7 @@ class Ennemi5a(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_test.webp")
+        self.image = pygame.image.load("sprites/img_test.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -488,7 +488,7 @@ class Pics(pygame.sprite.Sprite):
 
     def __init__(self, x, y, type):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_pics.webp")
+        self.image = pygame.image.load("sprites/img_pics.webp")
         self.image = pygame.transform.scale(self.image, (50, 30))
         if type == "up":
             self.image = pygame.transform.flip(self.image, False, True)
@@ -508,9 +508,9 @@ class Lave(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
         pygame.sprite.Sprite.__init__(self)
         if type == "lave":
-            self.image = pygame.image.load("sprites\img_lave2_1.webp")
+            self.image = pygame.image.load("sprites/img_lave2_1.webp")
         if type == "lave_full":
-            self.image = pygame.image.load("sprites\img_lave_full_1.webp")
+            self.image = pygame.image.load("sprites/img_lave_full_1.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -555,7 +555,7 @@ class Firemaker(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_firemaker_off_0.webp")
+        self.image = pygame.image.load("sprites/img_firemaker_off_0.webp")
         self.image = pygame.transform.scale(self.image, (50, 150))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -615,7 +615,7 @@ class Deathwall(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_deathwall.webp")
+        self.image = pygame.image.load("sprites/img_deathwall.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -639,7 +639,7 @@ class Exit(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        img = pygame.image.load("sprites\img_porte_exit.webp")
+        img = pygame.image.load("sprites/img_porte_exit.webp")
         self.image = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE * 2 - 20))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -677,7 +677,7 @@ class Bumper(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites\img_bumper.webp")
+        self.image = pygame.image.load("sprites/img_bumper.webp")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -705,10 +705,10 @@ class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
         pygame.sprite.Sprite.__init__(self)
         if type == "normal":
-            img = pygame.image.load("sprites\img_coin.webp")
+            img = pygame.image.load("sprites/img_coin.webp")
             self.image = pygame.transform.scale(img, (25, 25))
         if type == "big":
-            img = pygame.image.load("sprites\img_big_coin.webp")
+            img = pygame.image.load("sprites/img_big_coin.webp")
             self.image = pygame.transform.scale(img, (50,50))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
